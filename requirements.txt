@@ -1,0 +1,17 @@
+# Captioneer — Python backend dependencies
+# Install with: pip install -r requirements.txt
+
+# Speech-to-text (local Whisper, 4x faster than openai-whisper)
+faster-whisper>=1.0.0
+
+# ONNX runtime for Silero VAD
+onnxruntime>=1.17.0
+
+# WebSocket server
+websockets>=12.0
+
+# Audio processing
+numpy>=1.24.0
+
+# (optional) for development/debugging audio playback
+# sounddevice>=0.4.6

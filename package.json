@@ -1,0 +1,42 @@
+{
+  "name": "captioneer",
+  "version": "0.1.0",
+  "description": "Live local captions for any audio — EN, ZH, KO, JA",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --mac",
+    "install-deps": "npm install"
+  },
+  "devDependencies": {
+    "electron": "^30.5.1",
+    "electron-builder": "^24.0.0"
+  },
+  "build": {
+    "appId": "com.captioneer.app",
+    "productName": "Captioneer",
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "hardenedRuntime": true
+    },
+    "files": [
+      "frontend/**",
+      "backend/**"
+    ],
+    "extraResources": [
+      {
+        "from": "audio-tap/AudioTap",
+        "to": "AudioTap"
+      }
+    ]
+  },
+  "allowScripts": {
+    "electron@30.5.1": true
+  }
+}

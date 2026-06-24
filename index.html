@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Captioneer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Drag handle bar (top strip) -->
+  <div id="drag-bar">
+    <div id="status-dot" class="dot idle" title="Status"></div>
+    <span id="lang-badge">—</span>
+    <div id="controls">
+      <button id="btn-font-down" title="Smaller text">A−</button>
+      <button id="btn-font-up"   title="Larger text">A+</button>
+      <button id="btn-clear"     title="Clear captions">✕ Clear</button>
+      <button id="btn-quit"      title="Quit Captioneer">⏻</button>
+    </div>
+  </div>
+
+  <!-- Caption display area -->
+  <div id="caption-area">
+    <div id="caption-scroll">
+      <!-- Caption lines injected here by renderer.js -->
+      <p id="placeholder">Waiting for audio…</p>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
