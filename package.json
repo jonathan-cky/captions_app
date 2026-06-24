@@ -2,7 +2,7 @@
   "name": "captioneer",
   "version": "0.1.0",
   "description": "Live local captions for any audio — EN, ZH, KO, JA",
-  "main": "main.js",
+  "main": "frontend/main.js",
   "scripts": {
     "start": "electron .",
     "build": "electron-builder --mac",

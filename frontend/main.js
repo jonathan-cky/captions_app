@@ -48,7 +48,7 @@ function createOverlay() {
   overlayWindow.setAlwaysOnTop(true, "screen-saver");
   overlayWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
 
-  overlayWindow.loadFile(path.join(__dirname, "index.html"));
+  overlayWindow.loadFile(path.join(__dirname, "renderer/index.html"));
 
   // Keep window on top when other apps take focus
   overlayWindow.on("blur", () => {

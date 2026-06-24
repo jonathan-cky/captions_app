@@ -29,7 +29,7 @@ def find_audio_tap_binary() -> Path:
     Expected location: <project_root>/audio-tap/AudioTap  (compiled)
     Falls back to running via 'swift' directly for development.
     """
-    here        = Path(__file__).parent   # project root
+    here = Path(__file__).parent.parent   # project root
     binary_path = here / "audio-tap" / "AudioTap"
     if binary_path.exists():
         return binary_path

@@ -7,6 +7,19 @@ No internet. No cloud. No API keys. Fully private.
 
 ---
 
+## ⚠️ macOS Tahoe (macOS 16) Compatibility
+
+**Captioneer does not work on macOS Tahoe (macOS 16).**
+
+The `AudioTap` binary relies on ScreenCaptureKit's audio tap API, which has a known bug in macOS Tahoe that prevents system audio capture from functioning correctly. This is an Apple-side issue and has not been resolved as of June 24, 2026.
+
+**Supported:** macOS 13 Ventura · macOS 14 Sonoma · macOS 15 Sequoia  
+**Not supported:** macOS 16 Tahoe (until Apple ships a fix)
+
+If you are on Tahoe and want to track progress, watch this repo for updates.
+
+---
+
 ## How it works
 
 ```
@@ -23,13 +36,15 @@ System Audio (ScreenCaptureKit)
 
 ## Requirements
 
-| Tool | Version | Install |
-|---|---|---|
-| macOS | 13.0+ (Ventura) | — |
-| Xcode Command Line Tools | latest | `xcode-select --install` |
-| Python | 3.10+ | [python.org](https://python.org) or `brew install python` |
-| Node.js | 18+ | [nodejs.org](https://nodejs.org) or `brew install node` |
-| npm | 9+ | bundled with Node |
+| Tool                     | Version                        | Install                                                   |
+| ------------------------ | ------------------------------ | --------------------------------------------------------- |
+| macOS                    | 13.0–15.x (Ventura–Sequoia) ⚠️ | —                                                         |
+| Xcode Command Line Tools | latest                         | `xcode-select --install`                                  |
+| Python                   | 3.10+                          | [python.org](https://python.org) or `brew install python` |
+| Node.js                  | 18+                            | [nodejs.org](https://nodejs.org) or `brew install node`   |
+| npm                      | 9+                             | bundled with Node                                         |
+
+> ⚠️ macOS 16 Tahoe is **not supported** — see compatibility note above.
 
 ---
 
@@ -37,15 +52,15 @@ System Audio (ScreenCaptureKit)
 
 ### 1. Clone / download the project
 
-```bash
+```
 cd ~/Projects
-# place the captioneer/ folder here
+git clone https://github.com/jonathan-cky/captions_app captioneer
 cd captioneer
 ```
 
 ### 2. Compile the Swift audio tap
 
-```bash
+```
 swiftc audio-tap/AudioTap.swift \
   -o audio-tap/AudioTap \
   -framework ScreenCaptureKit \
@@ -53,23 +68,21 @@ swiftc audio-tap/AudioTap.swift \
   -framework CoreAudio \
   -framework CoreMedia
 ```
-
 > **Tip:** You only need to do this once. The binary is ~500KB.
 
 ### 3. Install Python dependencies
 
-```bash
+```
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
-
 > On first run, `faster-whisper` will download the Whisper model (~465MB for `small`).  
 > All models are cached in `backend/models/` — never downloaded again.
 
 ### 4. Install Node / Electron dependencies
 
-```bash
+```
 npm install
 ```
 
@@ -80,30 +93,15 @@ npm install
 You need **two terminal windows**:
 
 **Terminal 1 — Python backend:**
-```bash
 
+```
 source venv/bin/activate
-python main.py --model small
-
-# source venv/bin/activate
-# python main.py --model medium
-
+python backend/main.py --model small
 ```
 
 **Terminal 2 — Electron overlay:**
-```bash
-# Reinstall electron
-# rm -rf node_modules/electron
-# npm install electron
-# curl -L -o /tmp/electron.zip https://github.com/electron/electron/releases/download/v30.5.1/electron-v30.5.1-darwin-arm64.zip
-# mkdir -p node_modules/electron/dist
-# unzip /tmp/electron.zip -d node_modules/electron/dist/
-# printf "Electron.app/Contents/MacOS/Electron" > node_modules/electron/path.txt
-# chmod +x node_modules/electron/dist/Electron.app/Contents/MacOS/Electron
-# npm start
 
-
-# Then start
+```
 printf "Electron.app/Contents/MacOS/Electron" > node_modules/electron/path.txt
 chmod +x node_modules/electron/dist/Electron.app/Contents/MacOS/Electron
 npm start
@@ -111,8 +109,23 @@ npm start
 
 The caption bar will appear at the top of your screen. Play any video or audio — captions will appear within ~4 seconds.
 
+<details>
+<summary>Electron not launching? Manual reinstall steps</summary>
+
+```
+rm -rf node_modules/electron
+npm install electron
+curl -L -o /tmp/electron.zip https://github.com/electron/electron/releases/download/v30.5.1/electron-v30.5.1-darwin-arm64.zip
+mkdir -p node_modules/electron/dist
+unzip /tmp/electron.zip -d node_modules/electron/dist/
+printf "Electron.app/Contents/MacOS/Electron" > node_modules/electron/path.txt
+chmod +x node_modules/electron/dist/Electron.app/Contents/MacOS/Electron
+npm start
+```
+</details>
+
 ---
-  
+
 ## macOS Permission (one-time)
 
 On first launch, macOS will ask for **Screen Recording** permission.
@@ -126,31 +139,31 @@ This is required for ScreenCaptureKit to tap system audio.
 
 ## Model size guide
 
-```bash
+```
 # Fastest (testing)
-python main.py --model tiny
+python backend/main.py --model tiny
 
 # Recommended (good CJK accuracy, fast)
-python main.py --model small
+python backend/main.py --model small
 
 # Best accuracy (needs ~5GB RAM, still real-time on M1+)
-python main.py --model medium
+python backend/main.py --model medium
 
 # Maximum accuracy
-python main.py --model large-v3
+python backend/main.py --model large-v3
 ```
 
 ---
 
 ## Overlay controls
 
-| Control | Action |
-|---|---|
-| Drag the top bar | Move the window |
-| Drag bottom edge | Resize height |
-| **A+** / **A−** | Increase / decrease font size |
-| **✕ Clear** | Clear caption history |
-| **⏻** | Quit Captioneer |
+| Control          | Action                        |
+| ---------------- | ----------------------------- |
+| Drag the top bar | Move the window               |
+| Drag bottom edge | Resize height                 |
+| **A+** / **A−**  | Increase / decrease font size |
+| **✕ Clear**      | Clear caption history         |
+| **⏻**            | Quit Captioneer               |
 
 The window follows you across all macOS Spaces and full-screen apps.
 
@@ -189,10 +202,11 @@ captioneer/
 - Make sure Screen Recording permission is granted
 - Check that audio is actually playing (not muted)
 - Try `--model tiny` first to rule out model loading issues
+- If on macOS Tahoe (16), this is a known incompatibility — see the note at the top
 
 **AudioTap compile error:**
 - Run `xcode-select --install` to ensure Xcode CLI tools are present
-- Requires macOS 13+ SDK
+- Requires macOS 13–15 SDK (Tahoe SDK not supported)
 
 **Whisper not detecting CJK correctly:**
 - Use `--model medium` or `--model large-v3` for better CJK accuracy
@@ -212,3 +226,4 @@ captioneer/
 - [ ] Translation mode (ZH/KO/JA → EN)
 - [ ] Caption history export (.srt / .txt)
 - [ ] Packaged .app with embedded Python (PyInstaller)
+- [ ] macOS Tahoe (16) support — pending Apple fix for ScreenCaptureKit audio tap bug
